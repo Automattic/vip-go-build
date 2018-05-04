@@ -98,7 +98,7 @@ if ! command -v 'rsync'; then
 fi
 
 echo "Syncing files... quietly"
-rsync --cvs-exclude -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude-from "${SRC_DIR}/ci/.deployignore"
+rsync --cvs-exclude -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude='.git/'
 
 # Make up the commit, commit, and push
 # ------------------------------------
