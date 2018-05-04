@@ -91,6 +91,8 @@ fi
 # -------------------
 
 if ! command -v 'rsync'; then
+	# @FIXME Probably there's a way we could check if APT is up to date or not
+	# so we don't have to run update every time
 	sudo apt-get update
 	sudo apt-get install -q -y rsync
 fi
