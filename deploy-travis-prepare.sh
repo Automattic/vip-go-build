@@ -16,4 +16,4 @@ chmod 600 ~/.ssh/id_rsa
 # Restore script echoing now we've done the private things
 set -x
 
-curl -s https://raw.githubusercontent.com/Automattic/vip-go-build/master/known_hosts >> ~/.ssh/known_hosts
+curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/known_hosts" >> ~/.ssh/known_hosts
