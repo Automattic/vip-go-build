@@ -15,7 +15,8 @@ jobs:
       # REQUIRED: If you're amended an existing config, the below are two
       # of the required lines you must add
       ignore:
-        - /^.*(?<!-built)$/
+        - /^.*-built$/
+
     steps:
       - checkout
 
