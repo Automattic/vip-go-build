@@ -2,17 +2,26 @@ language: php
 
 sudo: false
 
-# DEPLOY: This "ignore" directive travis from processing branches with a -built
-# suffix, thus avoiding endless loops
+# This "ignore" directive travis from processing branches with
+# a -built suffix, thus avoiding endless loops
+# REQUIRED: If you're amended an existing config, the following
+# two lines are required.
 if: branch =~ ^.*(?<!-built)$
+
+# @TODO: Configure build steps
+# before_script:
+# - run: npm install
+# - run: npm run build
 
 # If you specify `script` directive, Travis will try to run PHPUnit
 # Replace this with whatever tests you wish, or leave in place if
 # you only want to run the deploy.
 script: echo "No tests"
 
-# DEPLOY: If you want to only run the deploy script when tests
-# pass, use `after_success` instead, you will need to add a
-# `script` directive with some tests if you want to do this :)
+# If you want to only run the deploy script when tests pass,
+# use `after_success` instead, you will need to add a `script`
+# directive with some tests if you want to do this :)
+# REQUIRED: If you're amended an existing config, the following
+# two lines are required.
 after_script:
-  - bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy-travis-prepare.sh") && bash <(curl -D /tmp/headers-2.txt -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh")
+  - bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy-travis-prepare.sh") && bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh")

@@ -10,13 +10,17 @@ jobs:
       - image: circleci/node:6.11-stretch
 
     branches:
-      only:
-        # Whitelist branches to build for.
-        - master
+      # Don't build from a branch with the `-built` suffix, to
+      # prevent endless loops of deploy scripts.
+      # REQUIRED: If you're amended an existing config, the below are two
+      # of the required lines you must add
+      ignore:
+        - /^.*-built$/
+
     steps:
       - checkout
 
-      # Configure build steps:
+      # @TODO: Configure build steps
       # - run: npm install
       # - run: npm run build
       #
@@ -26,5 +30,7 @@ jobs:
       #   command: npm run build-thing
 
       # Run the deploy:
+      # REQUIRED: If you're amended an existing config, the below are two
+      # of the required lines you must add
       - deploy:
           command: bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh")
