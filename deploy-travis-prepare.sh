@@ -3,6 +3,12 @@
 # Prepare to deploy your branch from Travis
 #
 
+if [[ -z "${BUILT_BRANCH_DEPLOY_KEY}" ]]; then
+	echo "ERROR: BUILT_BRANCH_DEPLOY_KEY not defined; ending build!"
+	echo "This variable needs to contain the deploy key for your machine user. Please see `ci/README.md` for how to create and set this key."
+	exit 1
+fi
+
 # Keep the key out of the build log for security
 set +x
 
