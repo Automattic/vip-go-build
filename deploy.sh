@@ -3,7 +3,7 @@
 # Deploy your branch on VIP Go.
 #
 
-# This script uses various Circle CI and Travis CI environment
+# This script uses various CircleCI and Travis CI environment
 # variables, Circle prefix their environment variables with
 # `CIRCLE_` and Travis with `TRAVIS_`.
 # Documentation:
@@ -40,14 +40,14 @@ COMMIT_COMMITTER_EMAIL="$( git log --format=%ce -n 1 ${COMMIT_SHA} )"
 # ---------------
 
 if [[ -n $TRAVIS ]] && [[ -n $CIRCLECI ]]; then
-	echo "ERROR: this script requires either Circle CI or Travis CI"
+	echo "ERROR: this script requires either CircleCI or Travis CI"
 	echo "You will need to amend the setup above to set the required variables from the information specific to your CI service or tool."
 	exit 1
 fi
 
 if [[ -z "${BRANCH}" ]]; then
 	echo "ERROR: No branch specified!"
-	echo "This variable should be set by Travis CI and Circle CI, if you consistently experience errors please check with WordPress.com VIP support."
+	echo "This variable should be set by Travis CI and CircleCI, if you consistently experience errors please check with WordPress.com VIP support."
 	exit 1
 fi
 
