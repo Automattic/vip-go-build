@@ -7,7 +7,7 @@
 # variables, CircleCI prefix their environment variables with
 # `CIRCLE_` and Travis with `TRAVIS_`.
 # Documentation:
-# https://circleci.com/docs/1.0/environment-variables/
+# https://circleci.com/docs/2.0/env-vars/#circleci-built-in-environment-variables
 # https://docs.travis-ci.com/user/environment-variables/
 
 set -ex
