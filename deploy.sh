@@ -88,7 +88,7 @@ else
 fi
 
 # Expand all submodules
-git submodule update -q --init --recursive;
+git submodule update --init --recursive;
 
 # Copy the files over
 # -------------------
