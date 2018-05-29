@@ -87,6 +87,9 @@ else
 	git checkout --quiet "${DEPLOY_BRANCH}"
 fi
 
+# Expand all submodules
+git submodule update -q --init --recursive;
+
 # Copy the files over
 # -------------------
 
