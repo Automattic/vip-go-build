@@ -101,7 +101,7 @@ if ! command -v 'rsync'; then
 fi
 
 echo "Syncing files... quietly"
-rsync -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude='.git/'
+rsync --delete -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude='.git/'
 
 # Make up the commit, commit, and push
 # ------------------------------------
