@@ -83,7 +83,7 @@ if [[ 0 = $(git ls-remote --heads "${REPO_SSH_URL}" "${DEPLOY_BRANCH}" | wc -l) 
 	git checkout --quiet --orphan "${DEPLOY_BRANCH}"
 else
 	echo "Using existing ${DEPLOY_BRANCH} branch"
-	git fetch origin "${DEPLOY_BRANCH}"
+	git fetch origin "${DEPLOY_BRANCH}" --depth=1
 	git checkout --quiet "${DEPLOY_BRANCH}"
 fi
 
