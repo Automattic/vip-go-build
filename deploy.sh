@@ -112,7 +112,9 @@ BUILD_DEPLOYIGNORE_PATH="${BUILD_DIR}/.deployignore"
 if [ -f $BUILD_DEPLOYIGNORE_PATH ]; then
 	BUILD_GITIGNORE_PATH="${BUILD_DIR}/.gitignore"
 
-	rm $BUILD_GITIGNORE_PATH
+	if [ -f $BUILD_GITIGNORE_PATH ]; then
+		rm $BUILD_GITIGNORE_PATH
+	fi
 
 	echo "-- found .deployignore; emptying all gitignore files"
 	find $BUILD_DIR -type f -name '.gitignore' | while read GITIGNORE_FILE; do
