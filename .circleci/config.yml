@@ -49,6 +49,7 @@ jobs:
 
       # Run the deploy:
       # This will push the result to the {currentbranch}-built branch
+      # Note: if running multiple times, you may need to `git push --delete origin {currentbranch}` between runs to clear out the branch.
       - deploy:
           name: Deploy -built branch to github
           command: ./deploy.sh
