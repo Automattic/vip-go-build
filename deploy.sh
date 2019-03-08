@@ -101,7 +101,30 @@ if ! command -v 'rsync'; then
 fi
 
 echo "Syncing files... quietly"
+
 rsync --delete -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude='.git/'
+
+# gitignore override
+# To allow commiting built files in the build branch (which are typically ignored)
+# -------------------
+
+BUILD_DEPLOYIGNORE_PATH="${BUILD_DIR}/.deployignore"
+if [ -f $BUILD_DEPLOYIGNORE_PATH ]; then
+	BUILD_GITIGNORE_PATH="${BUILD_DIR}/.gitignore"
+
+	if [ -f $BUILD_GITIGNORE_PATH ]; then
+		rm $BUILD_GITIGNORE_PATH
+	fi
+
+	echo "-- found .deployignore; emptying all gitignore files"
+	find $BUILD_DIR -type f -name '.gitignore' | while read GITIGNORE_FILE; do
+		echo "# Emptied by vip-go-build; '.deployignore' exists and used as global .gitignore. See https://wp.me/p9nvA-89A" > $GITIGNORE_FILE
+		echo "${GITIGNORE_FILE}"
+	done
+
+       	echo "-- using .deployignore as global .gitignore"
+	mv $BUILD_DEPLOYIGNORE_PATH $BUILD_GITIGNORE_PATH 
+fi
 
 # Make up the commit, commit, and push
 # ------------------------------------
