@@ -12,24 +12,12 @@ jobs:
     branches:
       # Don't build from a branch with the `-built` suffix, to
       # prevent endless loops of deploy scripts.
-      # REQUIRED: If you're amended an existing config, the below are two
-      # of the required lines you must add
       ignore:
         - /^.*-built$/
 
     steps:
       - checkout
 
-      # @TODO: Configure build steps
-      # - run: npm install
-      # - run: npm run build
-      #
-      # These can also be specified with a name:
-      # - run:
-      #   name: Build the thing
-      #   command: npm run build-thing
-
-      # @TODO: modify or remove this example
       - run: echo "Building..."
       - run:
           name: Create build directory
@@ -59,15 +47,9 @@ jobs:
               echo "Build failed, file missing"; exit 1
             fi
 
-      # Uncomment this and supply your ssh fingerprint to enable CircleCI to push the built branch to GitHub
-      #- add_ssh_keys:
-      #    fingerprints:
-      #      - "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"
-
       # Run the deploy:
-      # REQUIRED: If you're amended an existing config, the below are two
-      # of the required lines you must add
       # This will push the result to the {currentbranch}-built branch
+      # Note: if running multiple times, you may need to `git push --delete origin {currentbranch}` between runs to clear out the branch.
       - deploy:
           name: Deploy -built branch to github
           command: ./deploy.sh
