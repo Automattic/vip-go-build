@@ -72,7 +72,3 @@ jobs:
           name: Deploy -built branch to github
           command: bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh")
 
-      - run:
-          name: Verify that -built branch was deployed correctly
-          command: ./tests/verify-circle.sh
-
