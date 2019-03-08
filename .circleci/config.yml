@@ -70,7 +70,7 @@ jobs:
       # This will push the result to the {currentbranch}-built branch
       - deploy:
           name: Deploy -built branch to github
-          command: bash <(curl -s "https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh")
+          command: ./deploy.sh
 
       - run:
           name: Verify that -built branch was deployed correctly
