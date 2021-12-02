@@ -28,13 +28,13 @@ fi
 REPO_SLUG=${CIRCLE_REPO_SLUG:-$TRAVIS_REPO_SLUG}
 REPO_SSH_URL="git@github.com:${REPO_SLUG}"
 COMMIT_SHA=${CIRCLE_SHA1:-$TRAVIS_COMMIT}
+COMMIT_MESSAGE=${TRAVIS_COMMIT_MESSAGE:"fallback"}
 DEPLOY_BRANCH="${BRANCH}${DEPLOY_SUFFIX}"
 cd $SRC_DIR
 COMMIT_AUTHOR_NAME="$( git log --format=%an -n 1 ${COMMIT_SHA} )"
 COMMIT_AUTHOR_EMAIL="$( git log --format=%ae -n 1 ${COMMIT_SHA} )"
 COMMIT_COMMITTER_NAME="$( git log --format=%cn -n 1 ${COMMIT_SHA} )"
 COMMIT_COMMITTER_EMAIL="$( git log --format=%ce -n 1 ${COMMIT_SHA} )"
-
 
 # Run some checks
 # ---------------
@@ -102,7 +102,15 @@ fi
 
 echo "Syncing files... quietly"
 
-rsync --delete -a "${SRC_DIR}/" "${BUILD_DIR}" --exclude='.git/'
+rsync \
+	-a "${SRC_DIR}/" "${BUILD_DIR}" \
+	--exclude ".git" \
+	--exclude ".gitmodules" \
+	--exclude ".revision" \
+	--exclude ".deployment-state" \
+	--exclude node_modules/ \
+	--exclude no-vip/
+	--delete
 
 # gitignore override
 # To allow commiting built files in the build branch (which are typically ignored)
@@ -122,8 +130,8 @@ if [ -f $BUILD_DEPLOYIGNORE_PATH ]; then
 		echo "${GITIGNORE_FILE}"
 	done
 
-       	echo "-- using .deployignore as global .gitignore"
-	mv $BUILD_DEPLOYIGNORE_PATH $BUILD_GITIGNORE_PATH 
+	echo "-- using .deployignore as global .gitignore"
+	mv $BUILD_DEPLOYIGNORE_PATH $BUILD_GITIGNORE_PATH
 fi
 
 # Make up the commit, commit, and push
@@ -145,7 +153,7 @@ fi
 MESSAGE=$( printf 'Build changes from %s\n\n%s' "${COMMIT_SHA}" "${CIRCLE_BUILD_URL}" )
 # Set the Author to the commit (expected to be a client dev) and the committer
 # will be set to the default Git user for this CI system
-git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}"
+git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}" -m "${COMMIT_MESSAGE}"
 
 # Push it (push it real good).
 git push origin "${DEPLOY_BRANCH}"
