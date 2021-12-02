@@ -109,7 +109,7 @@ rsync \
 	--exclude ".revision" \
 	--exclude ".deployment-state" \
 	--exclude node_modules/ \
-	--exclude no-vip/
+	--exclude no-vip /
 	--delete
 
 # gitignore override
