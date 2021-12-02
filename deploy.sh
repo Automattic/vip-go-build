@@ -28,7 +28,7 @@ fi
 REPO_SLUG=${CIRCLE_REPO_SLUG:-$TRAVIS_REPO_SLUG}
 REPO_SSH_URL="git@github.com:${REPO_SLUG}"
 COMMIT_SHA=${CIRCLE_SHA1:-$TRAVIS_COMMIT}
-COMMIT_MESSAGE=${TRAVIS_COMMIT_MESSAGE:"fallback"}
+COMMIT_MESSAGE=${TRAVIS_COMMIT_MESSAGE}
 DEPLOY_BRANCH="${BRANCH}${DEPLOY_SUFFIX}"
 cd $SRC_DIR
 COMMIT_AUTHOR_NAME="$( git log --format=%an -n 1 ${COMMIT_SHA} )"
@@ -150,10 +150,10 @@ if [ -z "$(git status --porcelain)" ]; then
 fi
 
 # Commit it.
-MESSAGE=$( printf 'Build changes from %s\n\n%s' "${COMMIT_SHA}" "${CIRCLE_BUILD_URL}" )
+MESSAGE=$( printf 'Build changes from %s\n\n%s\n\\n%s' "${COMMIT_SHA}" "${CIRCLE_BUILD_URL}" "${COMMIT_MESSAGE}" )
 # Set the Author to the commit (expected to be a client dev) and the committer
 # will be set to the default Git user for this CI system
-git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}" -m "${COMMIT_MESSAGE}"
+git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}"
 
 # Push it (push it real good).
 git push origin "${DEPLOY_BRANCH}"
