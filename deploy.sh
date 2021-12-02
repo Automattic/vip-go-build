@@ -150,7 +150,7 @@ if [ -z "$(git status --porcelain)" ]; then
 fi
 
 # Commit it.
-MESSAGE=$( printf 'Build changes from %s\n\n%s\n\\n%s' "${COMMIT_SHA}" "${CIRCLE_BUILD_URL}" "${COMMIT_MESSAGE}" )
+MESSAGE=$( printf 'Build changes from %s\n\n%s\n\n%s' "${COMMIT_SHA}" "${CIRCLE_BUILD_URL}" "${COMMIT_MESSAGE}" )
 # Set the Author to the commit (expected to be a client dev) and the committer
 # will be set to the default Git user for this CI system
 git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}"
