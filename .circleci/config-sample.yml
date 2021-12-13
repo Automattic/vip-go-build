@@ -6,8 +6,8 @@ jobs:
       # building from https://hub.docker.com/r/cimg/node/tags
       #
       # Note: If using a different container, make sure it contains at least
-      # git 2.6.0. (Use -stretch for circleci/node containers.)
-      - image: cimg/node:12.16-stretch
+      # git 2.6.0.
+      - image: cimg/node:12.16
 
     branches:
       # Don't build from a branch with the `-built` suffix, to
