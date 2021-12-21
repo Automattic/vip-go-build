@@ -3,11 +3,11 @@ jobs:
   build:
     docker:
       # Pick a base image which matches the version of Node you need for
-      # building from https://hub.docker.com/r/circleci/node/tags/
+      # building from https://hub.docker.com/r/cimg/node/tags
       #
       # Note: If using a different container, make sure it contains at least
-      # git 2.6.0. (Use -stretch for circleci/node containers.)
-      - image: circleci/node:6.11-stretch
+      # git 2.6.0.
+      - image: cimg/node:12.6
 
     branches:
       # Don't build from a branch with the `-built` suffix, to
@@ -16,6 +16,10 @@ jobs:
         - /^.*-built$/
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "50:96:13:4c:e9:68:ee:7e:02:3a:b1:bd:dc:81:7d:d1"
+
       - checkout
 
       - run: echo "Building..."
