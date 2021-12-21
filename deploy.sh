@@ -94,10 +94,13 @@ git submodule update --init --recursive;
 # -------------------
 
 if ! command -v 'rsync'; then
-	# @FIXME Probably there's a way we could check if APT is up to date or not
-	# so we don't have to run update every time
-	apt-get update
-	apt-get install -q -y rsync
+	APT_GET_PREFIX=''
+	if command -v 'sudo'; then
+		APT_GET_PREFIX='sudo'
+	fi
+
+	$APT_GET_PREFIX apt-get update
+	$APT_GET_PREFIX apt-get install -q -y rsync
 fi
 
 echo "Syncing files... quietly"
