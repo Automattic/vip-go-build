@@ -16,6 +16,10 @@ jobs:
         - /^.*-built$/
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "50:96:13:4c:e9:68:ee:7e:02:3a:b1:bd:dc:81:7d:d1"
+
       - checkout
 
       - run: echo "Building..."
