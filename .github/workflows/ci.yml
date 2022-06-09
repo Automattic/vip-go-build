@@ -3,7 +3,8 @@ name: CI
 on:
   push:
     branches-ignore:
-      - "*-built"  
+      - "**-built"
+      - "**-built-**"
   workflow_dispatch:
 
 permissions:
@@ -15,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      VIP_DEPLOY_SUFFIX: "-gha-built"
     steps:
       - name: Check out source code
         uses: actions/checkout@v2
