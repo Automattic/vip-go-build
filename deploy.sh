@@ -93,12 +93,12 @@ echo "Deploying ${BRANCH} to ${DEPLOY_BRANCH}"
 
 # Making the directory we're going to sync the build into
 git init "${BUILD_DIR}"
+cd "${BUILD_DIR}"
 
 if [ -n "${GITHUB_AUTH_TOKEN}" ]; then
 	git config --local http.https://github.com/.extraheader "Authorization: basic ${GITHUB_AUTH_TOKEN}"
 fi
 
-cd "${BUILD_DIR}"
 git remote add origin "${REPO_SSH_URL}"
 if [[ 0 = $(git ls-remote --heads "${REPO_SSH_URL}" "${DEPLOY_BRANCH}" | wc -l) ]]; then
 	echo -e "\nCreating a ${DEPLOY_BRANCH} branch..."
