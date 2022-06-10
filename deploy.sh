@@ -93,6 +93,11 @@ echo "Deploying ${BRANCH} to ${DEPLOY_BRANCH}"
 
 # Making the directory we're going to sync the build into
 git init "${BUILD_DIR}"
+
+if [ -n "${GITHUB_AUTH_TOKEN}" ]; then
+	git config --local http.https://github.com/.extraheader "Authorization: basic ${GITHUB_AUTH_TOKEN}"
+fi
+
 cd "${BUILD_DIR}"
 git remote add origin "${REPO_SSH_URL}"
 if [[ 0 = $(git ls-remote --heads "${REPO_SSH_URL}" "${DEPLOY_BRANCH}" | wc -l) ]]; then
@@ -166,10 +171,6 @@ MESSAGE=$( printf 'Build changes from %s\n\n%s' "${COMMIT_SHA}" "${BUILD_URL}" )
 # Set the Author to the commit (expected to be a client dev) and the committer
 # will be set to the default Git user for this CI system
 git commit --author="${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>" -m "${MESSAGE}"
-
-if [ -n "${GITHUB_AUTH_TOKEN}" ]; then
-	git config --local http.https://github.com/.extraheader "Authorization: basic ${GITHUB_AUTH_TOKEN}"
-fi
 
 # Push it (push it real good).
 git push origin "${DEPLOY_BRANCH}"
