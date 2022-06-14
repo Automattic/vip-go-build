@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - "**-built"
+      - "**-built-**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VIP_DEPLOY_SUFFIX: "-gha-built"
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v2
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Create build readme
+        run: echo "This was built in CI on $(date)" > build/README.md
+
+      - name: Add some helpful info to the README
+        run: |
+          echo -e "\n\n## Continuous Integration & Continuous Deployment on VIP Go" >> build/README.md
+          echo -e "\nSee our docs in the [VIP Lobby](https://vip.wordpress.com/documentation/automated-build-and-deploy-on-vip-go/)" >> build/README.md
+          echo -e "\n\nThis branch e.g. master-built is created automatically when " >> build/README.md
+          echo "a commit or merge is made to the base branch e.g. master, using [your GitHub workflow](../.github/workflows/ci.yml), which you can **customize**" >> build/README.md
+
+      - name: Test the build
+        run: |
+          if [ -f build/README.md ]; then
+            echo "Build succeeded";
+          else
+            echo "Build failed, file missing"; exit 1
+          fi
+
+      - name: Deploy -built branch to github
+        run: |
+          export GITHUB_AUTH_TOKEN=$(echo -n "x-access-token:${GITHUB_TOKEN}" | base64 -w 0)
+          export GITHUB_TOKEN=""
+          ./deploy.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify that -built branch was deployed correctly
+        run: ./tests/verify-gha.sh
