@@ -110,7 +110,7 @@ else
 fi
 
 # Expand all submodules
-git submodule update --init --recursive;
+git submodule init
 
 # Copy the files over
 # -------------------
