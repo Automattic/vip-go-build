@@ -1,0 +1,91 @@
+name: CI (VIP Build and Deploy)
+
+on:
+  push:
+    # REQUIRED: Prevent endless loops of deploy scripts by not building from a branch name 
+    # that includes a `-built` suffix.
+    branches-ignore:
+      - "**-built"
+      - "**-built-**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      # The suffix to append to the current branch name when deploying the built branch.
+      # If migrating from another CI provider to GitHub Actions, a different suffix, like -gha-built,
+      # can be used to avoid conflicts during the CI migration.
+      #
+      # NOTE: For the changes to be deployed, the WordPress VIP application must be configured
+      # to deploy from the built branch.
+      # https://docs.wpvip.com/code-deployment/default-deployment/deploying-branches/update/
+      VIP_DEPLOY_SUFFIX: "-built" 
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+    
+      # @TODO: Configure build steps for the project, as needed.
+      # - name: Install NPM dependencies and run the npm build command at the root of the repository
+      #   run: npm ci && npm run build
+      #
+      # - name: Install PHP dependencies at the root of the repository
+      #   run: composer install --no-dev --no-interaction
+
+      # The following four steps are not required for all projects, but demonstrate how to create
+      # and update a README.md file with build information in a "build" directory, which will be
+      # included in the built branch.
+      
+      # 1. Create a build directory where a build artifact can be placed.
+      - name: Create build directory
+        run: mkdir -p build
+
+      # 2. Create a README.md file in the build directory.
+      - name: Create build readme
+        run: |
+          echo -e "# Continuous Integration & Continuous Deployment on VIP\n\nThis was built in CI on $(date)" > build/README.md
+
+      # 3. Add some helpful info to the ./build/README.md file.
+      - name: Add some helpful info to the ./build/README.md
+        run: |
+          echo -e "\nThis \`${GITHUB_REF_NAME}${VIP_DEPLOY_SUFFIX}\` branch was created automatically" \
+          "when a commit or merge was made to the base branch, \`${GITHUB_REF_NAME}\`, using" \
+          "[a GitHub Actions workflow](../.github/workflows/), which can be **customized**." >> build/README.md
+
+          echo -e "\nSee the WordPress VIP documentation about [Build and Deploy](https://docs.wpvip.com/code-deployment/default-deployment/build-and-deploy/)." >> build/README.md
+
+      # 4. Test the build steps above by verifying that the ./build/README.md file was created.
+      - name: Test the build
+        run: |
+          if [ -f build/README.md ]; then
+            echo "Build succeeded";
+          else
+            echo "Build failed, file missing"; exit 1
+          fi
+
+      # REQUIRED: Fetch and run the VIP deploy script to push the build artifacts to the built branch.
+      # If amending an existing config, the step below is one of the required steps to include.
+      # This will push the result to the {current_branch}-built branch,
+      # or {current_branch}{VIP_DEPLOY_SUFFIX} if a suffix is configured above.
+      #
+      # NOTE: For the changes to be deployed, the WordPress VIP application must be configured
+      # to deploy from the built branch.
+      # https://docs.wpvip.com/code-deployment/default-deployment/deploying-branches/update/
+      - name: Deploy built branch to GitHub
+        run: |
+          export GITHUB_AUTH_TOKEN=$(echo -n "x-access-token:${GITHUB_TOKEN}" | base64 -w 0)
+          export GITHUB_TOKEN=""
+          curl -fsSL https://raw.githubusercontent.com/Automattic/vip-go-build/master/deploy.sh -o deploy.sh
+          chmod +x deploy.sh
+          ./deploy.sh
+        env:
+          # REQUIRED: The {{ secrets.GITHUB_TOKEN }} is an automatically generated token used to push
+          # the new built branch to this GitHub repository.
+          # https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
