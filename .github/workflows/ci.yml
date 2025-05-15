@@ -20,7 +20,7 @@ jobs:
       VIP_DEPLOY_SUFFIX: "-gha-built"
     steps:
       - name: Check out source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create build directory
         run: mkdir -p build
